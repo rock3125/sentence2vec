@@ -4,7 +4,7 @@ Simple Python 3.5 implementation of the algorithm by Sanjeev Arora, Yingyu Liang
 
 example usage:
 
-`
+```python
 # test
 embedding_size = 4   # dimension of the word embedding
 w1 = Word('Peter', [0.1, 0.2, 0.3, 0.4])
@@ -17,5 +17,5 @@ sentence3 = Sentence([w3, w1, w2])
 
 # calculate and display the result
 print(sentence_to_vec([sentence1, sentence2, sentence3], embedding_size))
-`
+```
 
