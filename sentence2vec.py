@@ -58,7 +58,7 @@ def sentence_to_vec( sentence_list: List[Sentence], embedding_size, a = 1e-3):
     # calculate PCA of this sentence set
     pca = PCA(n_components=embedding_size)
     pca.fit(np.array(sentence_set))
-    u = pca.explained_variance_ratio_  # the PCA vector
+    u = pca.components_[0]  # the PCA vector
     u = np.multiply(u, np.transpose(u))  # u x uT
 
     # pad the vector?  (occurs if we have less sentences than embeddings_size)
