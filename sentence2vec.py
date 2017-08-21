@@ -48,7 +48,7 @@ def sentence_to_vec( sentence_list: List[Sentence], embedding_size, a = 1e-3):
 
     sentence_set = []
     for sentence in sentence_list:
-        vs = np.zeros(embedding_size)  # add all word2vec values into one vector for the sentence
+        vs = np.zeros(sentence.word_list[0].vector.shape[0])  # add all word2vec values into one vector for the sentence
         sentence_length = sentence.len()
         for word in sentence.word_list:
             a_value = a / (a + get_word_frequency(word.text))  # smooth inverse frequency, SIF
