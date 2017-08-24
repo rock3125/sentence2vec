@@ -26,17 +26,19 @@ class Word:
         self.text = text
         self.vector = vector
 
+
 # a sentence, a list of words
 class Sentence:
     def __init__(self, word_list):
         self.word_list = word_list
+
     # return the length of a sentence
     def len(self) -> int:
         return len(self.word_list)
 
 
 # todo: get the frequency for a word in a document set
-def get_word_frequency( word_text ):
+def get_word_frequency(word_text):
     return 1.0
 
 
@@ -44,11 +46,10 @@ def get_word_frequency( word_text ):
 # Sanjeev Arora, Yingyu Liang, Tengyu Ma
 # Princeton University
 # convert a list of sentence with word2vec items into a set of sentence vectors
-def sentence_to_vec( sentence_list: List[Sentence], embedding_size, a = 1e-3):
-
+def sentence_to_vec(sentence_list: List[Sentence], embedding_size: int, a: float=1e-3):
     sentence_set = []
     for sentence in sentence_list:
-        vs = np.zeros(sentence.word_list[0].vector.shape[0])  # add all word2vec values into one vector for the sentence
+        vs = np.zeros(embedding_size)  # add all word2vec values into one vector for the sentence
         sentence_length = sentence.len()
         for word in sentence.word_list:
             a_value = a / (a + get_word_frequency(word.text))  # smooth inverse frequency, SIF
@@ -77,6 +78,7 @@ def sentence_to_vec( sentence_list: List[Sentence], embedding_size, a = 1e-3):
     return sentence_vecs
 
 
+#####################################################################
 # test
 embedding_size = 300   # dimension of the word embedding
 
