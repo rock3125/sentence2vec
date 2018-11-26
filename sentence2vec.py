@@ -75,7 +75,7 @@ def sentence_to_vec(sentence_list: List[Sentence], embedding_size: int, a: float
         sentence_set.append(vs)  # add to our existing re-calculated set of sentences
 
     # calculate PCA of this sentence set
-    pca = PCA(n_components=embedding_size)
+    pca = PCA()
     pca.fit(np.array(sentence_set))
     u = pca.components_[0]  # the PCA vector
     u = np.multiply(u, np.transpose(u))  # u x uT
