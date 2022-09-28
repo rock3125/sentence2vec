@@ -15,30 +15,48 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import spacy
+import pickle
+import os
 import math
 from sentence2vec import Word, Sentence, sentence_to_vec
 
-# use the spacy large model's vectors for testing semantic relatedness
-# this assumes you've already installed the large model, if not download it and pip install it:
-# wget https://github.com/explosion/spacy-models/releases/tag/en_core_web_lg-2.0.0
-# pip install en_core_web_lg-2.0.0.tar.gz
-nlp = spacy.load('en_core_web_lg')
 
-
-# euclidean distance between two vectors
-def l2_dist(v1, v2):
-    sum = 0.0
+# inner product of two vectors
+def inner_product(v1, v2):
     if len(v1) == len(v2):
+        sum = 0.0
+        size_v1 = 0.0
+        size_v2 = 0.0
         for i in range(len(v1)):
-            delta = v1[i] - v2[i]
-            sum += delta * delta
-        return math.sqrt(sum)
+            size_v1 += v1[i] * v1[i]
+            size_v2 += v2[i] * v2[i]
+            sum += v1[i] * v2[i]
+        size_v1 = math.sqrt(size_v1)
+        size_v2 = math.sqrt(size_v2)
+        size_mult = size_v1 * size_v2
+        if size_mult != 0.0:
+            return round(sum / size_mult, 4)
+    return 0.0
 
 
 if __name__ == '__main__':
 
-    embedding_size = 300   # dimension of spacy word embeddings
+    embedding_size = 50   # dimension of glove
+
+    glove_50_dict = dict()
+    if not os.path.exists('glove/glove.6b.50d.pickle'):
+        with open('glove/glove.6B.50d.txt', 'rt') as reader:
+            for line in reader:
+                line = line.strip().split(' ')
+                if len(line) == 51:
+                    word = line[0]
+                    vector = [float(item) for item in line[1:]]
+                    glove_50_dict[word] = vector
+        with open('glove/glove.6b.50d.pickle', 'wb') as writer:
+            pickle.dump(glove_50_dict, writer, protocol=pickle.HIGHEST_PROTOCOL)
+    else:
+        with open('glove/glove.6b.50d.pickle', 'rb') as reader:
+            glove_50_dict = pickle.load(reader)
 
     # load some simple sentences for testing similarities between
     sentences = []
@@ -52,9 +70,8 @@ if __name__ == '__main__':
     for sentence in sentences:
         word_list = []
         for word in sentence:
-            token = nlp.vocab[word]
-            if token.has_vector:  # ignore OOVs
-                word_list.append(Word(word, token.vector))
+            if word.lower() in glove_50_dict:  # ignore OOVs
+                word_list.append(Word(word, glove_50_dict[word.lower()]))
         if len(word_list) > 0:  # did we find any words (not an empty set)
             sentence_list.append(Sentence(word_list))
 
@@ -70,15 +87,13 @@ if __name__ == '__main__':
     sentence_seen = set()
     # go through each sentence and compare it with each other sentence
     for text1, vector1 in sentence_vector_lookup.items():
+        best_match = ''
+        best_score = 0.0
         for text2, vector2 in sentence_vector_lookup.items():
-            if text1 < text2:  # don't repeat combinations already seen
-                unique = text1 + ':' + text2
-            else:
-                unique = text2 + ':' + text1
-
-            if not unique in sentence_seen:
-                sentence_seen.add(unique)
-                print(text1 + ' :: ' + text2 + ' => distance = ' + str(l2_dist(vector1, vector2)))
-
-
-
+            if text2 == text1:  # only when different
+                continue
+            match = inner_product(vector1, vector2)
+            if match > best_score:
+                best_score = match
+                best_match = text2
+        print("best match \"{}\" = \"{}\" (score {})".format(text1, best_match, str(best_score)))

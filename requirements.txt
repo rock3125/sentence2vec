@@ -1,4 +1,1 @@
-sklearn
 numpy
-scipy
-spacy
