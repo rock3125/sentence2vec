@@ -15,8 +15,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import pickle
-import os
 import math
 from sentence2vec import Word, Sentence, sentence_to_vec
 
@@ -43,20 +41,15 @@ if __name__ == '__main__':
 
     embedding_size = 50   # dimension of glove
 
+    # load the glove set from file
     glove_50_dict = dict()
-    if not os.path.exists('glove/glove.6b.50d.pickle'):
-        with open('glove/glove.6B.50d.txt', 'rt') as reader:
-            for line in reader:
-                line = line.strip().split(' ')
-                if len(line) == 51:
-                    word = line[0]
-                    vector = [float(item) for item in line[1:]]
-                    glove_50_dict[word] = vector
-        with open('glove/glove.6b.50d.pickle', 'wb') as writer:
-            pickle.dump(glove_50_dict, writer, protocol=pickle.HIGHEST_PROTOCOL)
-    else:
-        with open('glove/glove.6b.50d.pickle', 'rb') as reader:
-            glove_50_dict = pickle.load(reader)
+    with open('glove/glove.6B.50d.txt', 'rt') as reader:
+        for line in reader:
+            line = line.strip().split(' ')
+            if len(line) == 51:
+                word = line[0]
+                vector = [float(item) for item in line[1:]]
+                glove_50_dict[word] = vector
 
     # load some simple sentences for testing similarities between
     sentences = []
@@ -94,4 +87,4 @@ if __name__ == '__main__':
             if match > best_score:
                 best_score = match
                 best_match = text2
-        print("best match \"{}\" = \"{}\" (score {})".format(text1, best_match, str(best_score)))
+        print("best match \"{}\" => \"{}\" (score {})".format(text1, best_match, str(best_score)))

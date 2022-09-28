@@ -63,8 +63,8 @@ class Sentence:
 
 # return a typical frequency for a word from Google's n-grams
 def get_word_frequency(word_text):
-    if word_text in word_frequency:
-        return word_frequency[word_text]
+    if word_text.lower() in word_frequency:
+        return word_frequency[word_text.lower()]
     else:
         return 1.0
 
