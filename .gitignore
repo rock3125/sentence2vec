@@ -2,4 +2,5 @@
 .idea
 glove
 venv
+__pycache__
 

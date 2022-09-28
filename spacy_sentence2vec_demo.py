@@ -83,9 +83,7 @@ if __name__ == '__main__':
             # map: text of the sentence -> vector
             sentence_vector_lookup[sentence_list[i].__str__()] = sentence_vectors[i]
 
-    # display similarity between each of the sentences
-    sentence_seen = set()
-    # go through each sentence and compare it with each other sentence
+    # go through each sentence and compare it with each other sentence and find the best match
     for text1, vector1 in sentence_vector_lookup.items():
         best_match = ''
         best_score = 0.0

@@ -19,6 +19,15 @@ import numpy as np
 from typing import List
 
 
+# word.lower() => frequency int
+word_frequency = dict()
+with open('word-frequency-list.txt', 'rt') as reader:
+    for line in reader:
+        line = line.strip().split(' ')
+        if len(line) == 2:
+            word_frequency[line[0].lower()] = float(line[1])
+
+
 # an embedding word with associated vector
 class Word:
     def __init__(self, text, vector):
@@ -49,10 +58,12 @@ class Sentence:
         return self.__str__()
 
 
-# todo: get a proper word frequency for a word in a document set
-# or perhaps just a typical frequency for a word from Google's n-grams
+# return a typical frequency for a word from Google's n-grams
 def get_word_frequency(word_text):
-    return 0.0001  # set to a low occurring frequency - probably not unrealistic for most words, improves vector values
+    if word_text in word_frequency:
+        return word_frequency[word_text]
+    else:
+        return 1.0
 
 
 # convert a list of sentence with glove vectors into a set of sentence vectors
