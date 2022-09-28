@@ -9,9 +9,11 @@ cd glove
 curl https://nlp.stanford.edu/data/glove.6B.zip
 unzip glove.6B.zip
 cd ..
+# run the demo
+python3 sentence2vec_demo.py
 ```
 
-example usage, see `spacy_sentence2vec_demo.py` which reads the text file `semantic_test_text.txt` and finds the best
+example usage, see `sentence2vec_demo.py` which reads the text file `semantic_test_text.txt` and finds the best
 match for each item that isn't a 100% match.
 
 Sample output of this program:
