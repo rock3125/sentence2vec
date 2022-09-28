@@ -82,13 +82,15 @@ def sentence_to_vec(sentence_list: List[Sentence], embedding_size: int):
     delta = 0.001  # small value to avoid division by 0
     for sentence in sentence_list:
         vs = np.zeros(embedding_size)  # add all glove values into one vector for the sentence
-        sentence_length = sentence.len()
+        sentence_length = 0.0
         for word in sentence.word_list:
             # basically the importance of a word becomes less the more frequent it is
             a_value = delta / (delta + get_word_frequency(word.text))  # smooth inverse frequency, SIF
+            sentence_length += a_value
             vs = np.add(vs, np.multiply(a_value, word.vector))  # vs += sif * word_vector
 
-        vs = np.divide(vs, sentence_length)  # weighted average
+        if sentence_length != 0.0:
+            vs = np.divide(vs, sentence_length)  # weighted average
         sentence_set.append(vs)  # add to our existing re-calculated set of sentences
 
     return sentence_set
