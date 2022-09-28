@@ -17,15 +17,18 @@
 
 import numpy as np
 from typing import List
+import math
 
 
 # word.lower() => frequency int
 word_frequency = dict()
 with open('word-frequency-list.txt', 'rt') as reader:
+    max_value = 0.0
     for line in reader:
         line = line.strip().split(' ')
         if len(line) == 2:
-            word_frequency[line[0].lower()] = float(line[1])
+            value = float(line[1])
+            word_frequency[line[0].lower()] = math.log2(value)
 
 
 # an embedding word with associated vector
