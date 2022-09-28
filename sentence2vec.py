@@ -22,13 +22,18 @@ import math
 
 # word.lower() => frequency int
 word_frequency = dict()
+avg_frequency = 1.0
 with open('word-frequency-list.txt', 'rt') as reader:
     max_value = 0.0
+    counter = 0
     for line in reader:
         line = line.strip().split(' ')
         if len(line) == 2:
-            value = float(line[1])
-            word_frequency[line[0].lower()] = math.log2(value)
+            value = math.log2(float(line[1]))
+            avg_frequency += value
+            counter += 1
+            word_frequency[line[0].lower()] = value
+    avg_frequency /= counter
 
 
 # an embedding word with associated vector
@@ -66,7 +71,7 @@ def get_word_frequency(word_text):
     if word_text.lower() in word_frequency:
         return word_frequency[word_text.lower()]
     else:
-        return 1.0
+        return avg_frequency
 
 
 # convert a list of sentence with glove vectors into a set of sentence vectors
