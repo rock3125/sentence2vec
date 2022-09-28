@@ -39,14 +39,15 @@ def inner_product(v1, v2):
 
 if __name__ == '__main__':
 
-    embedding_size = 50   # dimension of glove
+    glove_file = 'glove/glove.6B.100d.txt'
+    embedding_size = 100   # dimension of glove, must match glove_file size (50 = 50d, 100 = 100d, etc)
 
     # load the glove set from file
     glove_50_dict = dict()
-    with open('glove/glove.6B.50d.txt', 'rt') as reader:
+    with open(glove_file, 'rt') as reader:
         for line in reader:
             line = line.strip().split(' ')
-            if len(line) == 51:
+            if len(line) == (embedding_size + 1):
                 word = line[0]
                 vector = [float(item) for item in line[1:]]
                 glove_50_dict[word] = vector
